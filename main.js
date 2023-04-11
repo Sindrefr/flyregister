@@ -1,30 +1,36 @@
-const form = document.querySelector('form');
-form.addEventListener('submit', async (event) => {
-  event.preventDefault();
 
-  const registrationNumber = document.getElementById('registration-number').value;
-  const options = {
-    method: 'GET',
-    headers: {
-      'X-RapidAPI-Key': '9de2bbed23msh91ff2cffda5c83ep12bcaejsn3be008aca588',
-      'X-RapidAPI-Host': 'aerodatabox.p.rapidapi.com'
-    }
-  };
-  const apiUrl = `https://aerodatabox.p.rapidapi.com/aircrafts/registration/${registrationNumber}`;
+// Define the search button and add an event listener to trigger the search
+const searchButton = document.getElementById('search-button');
+searchButton.addEventListener('click', searchPokemon);
 
-  try {
-    const response = await fetch(apiUrl, options);
-
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
-
-    const data = await response.json();
-
-    // Do something with the data, e.g. display it on the page
-    console.log(data);
-  } catch (error) {
-    // Handle errors, e.g. display an error message to the user
-    console.error(error);
+// Define the searchPokemon function to fetch data for a given Pokemon and display it
+async function searchPokemon() {
+  const searchBar = document.getElementById('search-bar');
+  const pokemonName = searchBar.value.toLowerCase();
+  const apiUrl = `https://pokeapi.co/api/v2/pokemon/${pokemonName}`;
+  const response = await fetch(apiUrl);
+  if (response.ok) {
+    const pokemonData = await response.json();
+    displayPokemon(pokemonData);
+  } else {
+    alert('Pokemon not found');
   }
-});
+}
+
+// Define the displayPokemon function to display the results in the results section
+function displayPokemon(pokemonData) {
+  const resultsDiv = document.getElementById('results');
+  resultsDiv.innerHTML = `
+    <div class= "container">
+    <h2 class= "pokenavn">${pokemonData.name.toUpperCase()}</h2>
+    <img class= "bilde" src="${pokemonData.sprites.front_default}">
+    <p class= "hehe">Type: ${pokemonData.types[0].type.name}</p>
+    <p class= "hehe">Height: ${pokemonData.height}</p>
+    <p class= "hehe">Weight: ${pokemonData.weight}</p>
+    </div>
+  `;
+}
+
+
+
+
